@@ -23,6 +23,5 @@ namespace RestaurantReviewProgram.Controllers
             newRev.RevWordCount = review.Split(' ').Count();
             return newRev;
         }
-
     }
 }
