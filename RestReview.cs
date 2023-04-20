@@ -1,4 +1,5 @@
 ﻿using RestaurantReviewProgram.Controllers;
+using static RestaurantReviewProgram.SentimentModel;
 
 namespace RestaurantReviewProgram
 {
@@ -13,6 +14,17 @@ namespace RestaurantReviewProgram
         {
             revBody = review;
             revWordCount = wordCount(review);
+            // ML MODEL
+
+            //Load sample data
+            var sampleData = new SentimentModel.ModelInput()
+            {
+                Col0 = review, //@"Crust is not good.",
+            };
+
+            //Load model and predict output
+            revSentiment = (int) SentimentModel.Predict(sampleData).PredictedLabel;
+
         }
         // Getters and setters-
         /* All of these should be set with constructor, and 
