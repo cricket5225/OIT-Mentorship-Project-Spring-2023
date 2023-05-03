@@ -8,11 +8,11 @@ namespace RestaurantReviewProgram.Controllers
      * Route should be name of controller -controller */
     public class ServerCheck : ControllerBase
     {
-            private readonly ILogger<ServerCheck> _logger; // Dependency injection
+            private readonly ILogger<ServerCheck> logger; // Dependency injection
 
             public ServerCheck(ILogger<ServerCheck> logger)
             {
-                _logger = logger;
+                this.logger = logger;
             }
 
             [HttpGet()]
