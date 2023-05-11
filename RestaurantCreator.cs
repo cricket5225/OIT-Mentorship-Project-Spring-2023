@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReviewProgram.Models;
-using System.Net.Mail;
+using System.Net.Sockets;
+using System.Net;
+using System.Web;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RestaurantReviewProgram.Controllers
 {
@@ -11,17 +18,23 @@ namespace RestaurantReviewProgram.Controllers
     {
         private readonly ILogger<RestaurantCreator> logger;
         private readonly RestaurantList restaurantList;
+        private readonly HttpClient httpClient;
+        private readonly string key;
 
-        public RestaurantCreator(RestaurantList restaurantList, ILogger<RestaurantCreator> logger)
+        public RestaurantCreator(RestaurantList restaurantList, ILogger<RestaurantCreator> logger, HttpClient httpClient, IOptions<Models.Secret> secret)
         {
             this.restaurantList = restaurantList;
             this.logger = logger;
+            this.httpClient = httpClient;
+            this.key = secret.Value.ApiKey;
+            httpClient.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/geocode/json");
         }
 
         // Creation - Post
         [HttpPost()]
-        public ActionResult<Restaurant> createRestaurant(Restaurant restaurant)
+        public async Task<ActionResult<Restaurant>> createRestaurant(Restaurant restaurant)
         {
+            await geocode(restaurant);
             // Add ID- Nullable?
             restaurant.Id = Guid.NewGuid();
             // Store in singleton list
@@ -32,11 +45,12 @@ namespace RestaurantReviewProgram.Controllers
         }
         // Updating - Put
         [HttpPut()]
-        public ActionResult<Restaurant> updateRestaurant(Restaurant restaurant)
+        public async Task <ActionResult<Restaurant>> updateRestaurant(Restaurant restaurant)
         {
             // Object will already have an id
             if (restaurantList.Keys.Contains(restaurant.Id))
             {
+                await geocode(restaurant);
                 // Find Restaurant with ID in singleton 
                 // Update all fields in singleton
                 restaurantList[restaurant.Id] = restaurant;
@@ -62,6 +76,19 @@ namespace RestaurantReviewProgram.Controllers
                 return restaurantList[id];
             }
             else { return new NotFoundResult(); }
+        }
+
+        // Geocoding
+        private async Task geocode(Restaurant restaurant)
+        {
+            // Formatting for HTTP
+            string address = $"{restaurant.Address},{restaurant.City},{restaurant.State}";
+            address = HttpUtility.UrlEncode(address);
+            // Access url + return results into a response class + deserialization
+            GeocodeResponse? message = await httpClient.GetFromJsonAsync<GeocodeResponse>($"?address={address}&key={key}");
+            // Response -> Results -> Geometry -> Location
+            restaurant.Latitude = message.Results[0].Geometry.Location.Lat; // Need to access deserialized data
+            restaurant.Longitude = message.Results[0].Geometry.Location.Lng;
         }
     }
 }

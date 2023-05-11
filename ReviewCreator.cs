@@ -4,7 +4,7 @@ using RestaurantReviewProgram.Models;
 namespace RestaurantReviewProgram.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("Restaurant/")]
     public class ReviewCreator : ControllerBase
     {
         private readonly ILogger<ReviewCreator> logger;
@@ -16,9 +16,7 @@ namespace RestaurantReviewProgram.Controllers
             this.logger = logger;
         }
 
-        [HttpGet("{restaurantId}")] 
-        /* Want to make this look like /{restaurantId}/ReviewCreator-
-         * Possible to move controller name to back of URI like that? */
+        [HttpGet("{restaurantId}/Review")] 
         public RestaurantReview reviewCreator(string reviewString, Guid restaurantId, RestaurantList restaurantList) 
         {
             // Turn reviewString into a review object to get sentiment
