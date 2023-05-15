@@ -90,5 +90,22 @@ namespace RestaurantReviewProgram.Controllers
             restaurant.Latitude = message.Results[0].Geometry.Location.Lat; // Need to access deserialized data
             restaurant.Longitude = message.Results[0].Geometry.Location.Lng;
         }
+        // Creating map
+        //      https://developers.google.com/maps/documentation/javascript/datalayer
+        //      https://developers.google.com/maps/documentation/javascript/geometry
+        /*      ^ this describes a process by which you create a map, then individual marker variables for 
+         *      the map. would the best way to do this be creating an arraylist(or other expandable data structure)
+         *      of markers associated with each restauraunt, or can/should marker be part of the restaurant class
+         *      so the two are intrinsically linked?
+         *      addtl: how do we test this? does this only work in javascript, bc it generates an image?
+         *      do we want to generate and return a geoJSON with points instead?
+         */
+        //      https://developers.google.com/maps/documentation/android-sdk/utility
+        /*      iconGenerator allows customization of marker- include restaurant name and or ratings in this option?
+         */
+        public void mapRestaurant(Restaurant restaurant)
+        {
+
+        }
     }
 }
