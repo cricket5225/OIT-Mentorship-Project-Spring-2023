@@ -2,7 +2,7 @@
 {
     public class GeocodeResult
     {
-        /// <summmary>Restaurant's geometry, from JSON</summary>
+        /// <summary>Restaurant's geometry, from JSON</summary>
         public GeocodeResultGeometry Geometry { get; set; }
     }
 }

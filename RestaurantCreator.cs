@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Drawing;
 
 namespace RestaurantReviewProgram.Controllers
 {
@@ -27,7 +28,13 @@ namespace RestaurantReviewProgram.Controllers
             this.logger = logger;
             this.httpClient = httpClient;
             this.key = secret.Value.ApiKey;
-            httpClient.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/geocode/json");
+            httpClient.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/");
+        }
+
+        [HttpGet("map")]
+        public async Task createMapTest()
+        {
+            await generateMap();
         }
 
         // Creation - Post
@@ -79,33 +86,45 @@ namespace RestaurantReviewProgram.Controllers
         }
 
         // Geocoding
+        // https://maps.googleapis.com/maps/api/geocode/json?place_id=ChIJeRpOeF67j4AR9ydy_PIzPuM&key=YOUR_API_KEY
         private async Task geocode(Restaurant restaurant)
         {
             // Formatting for HTTP
             string address = $"{restaurant.Address},{restaurant.City},{restaurant.State}";
             address = HttpUtility.UrlEncode(address);
             // Access url + return results into a response class + deserialization
-            GeocodeResponse? message = await httpClient.GetFromJsonAsync<GeocodeResponse>($"?address={address}&key={key}");
+            GeocodeResponse? message = await httpClient.GetFromJsonAsync<GeocodeResponse>($"geocode/json?address={address}&key={key}");
             // Response -> Results -> Geometry -> Location
             restaurant.Latitude = message.Results[0].Geometry.Location.Lat; // Need to access deserialized data
             restaurant.Longitude = message.Results[0].Geometry.Location.Lng;
         }
-        // Creating map
-        //      https://developers.google.com/maps/documentation/javascript/datalayer
-        //      https://developers.google.com/maps/documentation/javascript/geometry
-        /*      ^ this describes a process by which you create a map, then individual marker variables for 
-         *      the map. would the best way to do this be creating an arraylist(or other expandable data structure)
-         *      of markers associated with each restauraunt, or can/should marker be part of the restaurant class
-         *      so the two are intrinsically linked?
-         *      addtl: how do we test this? does this only work in javascript, bc it generates an image?
-         *      do we want to generate and return a geoJSON with points instead?
-         */
-        //      https://developers.google.com/maps/documentation/android-sdk/utility
-        /*      iconGenerator allows customization of marker- include restaurant name and or ratings in this option?
-         */
-        public void mapRestaurant(Restaurant restaurant)
-        {
 
+        // Creating map
+        private async Task<string> generateMap()
+        {
+            string markers = "";
+            foreach (Restaurant restaurant in restaurantList.Values)
+            {
+                markers += $"&markers = label: F % 7C{restaurant.Latitude},{restaurant.Longitude}";
+                //Add logic for symbols to be + or - depending on rating
+            }
+            markers = HttpUtility.UrlEncode(markers);
+            HttpResponseMessage message = await httpClient.GetAsync($"staticmap?size=400x400{markers}&key={key}");
+            return message.ToString();
+            // Did research into returning this as a byte[] and ouldn't figure it out, tried to convert to GeoJSON below
+        }
+
+        // Return GeoJSON of one restaurant
+        // https://learn.microsoft.com/en-us/bingmaps/v8-web-control/modules/geojson-module/
+        private string generateGeoJson(Guid id)
+        {
+            /* This method only turns one restaurant into a GeoJSON. Once this works, a foreach loop 
+             * can be used on the restaurantList to do all at once */
+
+            // Should take in one restaurant and generate a GeoJSON object
+            GeoJSON geoJSON = new GeoJSON(restaurantList[id]);
+            // Should return GeoJSON object as a string
+            return JsonSerializer.Serialize(geoJSON);
         }
     }
 }

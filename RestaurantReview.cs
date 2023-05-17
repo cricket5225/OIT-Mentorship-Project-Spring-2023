@@ -27,18 +27,18 @@ namespace RestaurantReviewProgram.Models
             revSentiment = (int)Predict(sampleData).PredictedLabel;
         }
         // Getters and setters-
-        /// <summmary>Body of the review</summary>
+        /// <summary>Body of the review</summary>
         /// <example>This place is totally great!</example>
         public string RevBody
         {
             get { return revBody; }
         }
-        /// <summmary>Word count of the review</summary>
+        /// <summary>Word count of the review</summary>
         public int RevWordCount
         {
             get { return revWordCount; }
         }
-        /// <summmary>Machine generated analysis of the review: Positive (1) or negative (0)</summary>
+        /// <summary>Machine generated analysis of the review: Positive (1) or negative (0)</summary>
         public int RevSentiment
         {
             get { return revSentiment; }

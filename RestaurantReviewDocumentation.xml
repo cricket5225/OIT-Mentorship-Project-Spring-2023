@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RestaurantReviewProgram</name>
+    </assembly>
+    <members>
+        <member name="P:RestaurantReviewProgram.Models.GeocodeResponse.Results">
+            <summary>List of geocode results, from JSON</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.GeocodeResult.Geometry">
+            <summary>Restaurant's geometry, from JSON</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.GeocodeResultGeometry.Location">
+            <summary>Restaurant's location, from JSON</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.GeocodeResultLocation.Lat">
+            <summary>Restaurant's latitude, from JSON</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.GeocodeResultLocation.Lng">
+            <summary>Restaurant's longitude, from JSON</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Name">
+            <summary>The restaurant's name</summary>
+            <example>Local Woodfired Grill</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Id">
+            <summary>A unique GUID to identify a restaurant</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Address">
+            <summary>Street address the restaurant is located at</summary>
+            <example>5315 Windward Parkway</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.City">
+            <summary>City the restaurant is located in</summary>
+            <example>Alpharetta</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.State">
+            <summary>State the restaurant is located in</summary>
+            <example>GA</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Zip">
+            <summary>Postal code the restaurant is located in</summary>
+            <example>30004</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Latitude">
+            <summary>Restaurant's latitude</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.Longitude">
+            <summary>Restaurant's longitude</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.PositiveReviews">
+            <summary>Count of restaurant's positive reviews</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.Restaurant.NegativeReviews">
+            <summary>Count of restaurant's negative reviews</summary>
+        </member>
+        <member name="M:RestaurantReviewProgram.Models.RestaurantList.#ctor">
+            <summary>List of all recorded restaurants</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.RestaurantReview.RevBody">
+            <summary>Body of the review</summary>
+            <example>This place is totally great!</example>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.RestaurantReview.RevWordCount">
+            <summary>Word count of the review</summary>
+        </member>
+        <member name="P:RestaurantReviewProgram.Models.RestaurantReview.RevSentiment">
+            <summary>Machine generated analysis of the review: Positive (1) or negative (0)</summary>
+        </member>
+        <member name="T:RestaurantReviewProgram.SentimentModel.ModelInput">
+            <summary>
+            model input class for SentimentModel.
+            </summary>
+        </member>
+        <member name="T:RestaurantReviewProgram.SentimentModel.ModelOutput">
+            <summary>
+            model output class for SentimentModel.
+            </summary>
+        </member>
+        <member name="M:RestaurantReviewProgram.SentimentModel.Predict(RestaurantReviewProgram.SentimentModel.ModelInput)">
+            <summary>
+            Use this method to predict on <see cref="T:RestaurantReviewProgram.SentimentModel.ModelInput"/>.
+            </summary>
+            <param name="input">model input.</param>
+            <returns><seealso cref="T:RestaurantReviewProgram.SentimentModel.ModelOutput"/></returns>
+        </member>
+        <member name="M:RestaurantReviewProgram.SentimentModel.RetrainPipeline(Microsoft.ML.MLContext,Microsoft.ML.IDataView)">
+            <summary>
+            Retrains model using the pipeline generated as part of the training process. For more information on how to load data, see aka.ms/loaddata.
+            </summary>
+            <param name="mlContext"></param>
+            <param name="trainData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RestaurantReviewProgram.SentimentModel.BuildPipeline(Microsoft.ML.MLContext)">
+            <summary>
+            build the pipeline that is used from model builder. Use this function to retrain model.
+            </summary>
+            <param name="mlContext"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

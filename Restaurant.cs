@@ -27,7 +27,7 @@ namespace RestaurantReviewProgram.Models
             this.zip = zip;
         }
         // Getters/Setters
-        /// <summmary>The restaurant's name</summary>
+        /// <summary>The restaurant's name</summary>
         /// <example>Local Woodfired Grill</example>
         public string Name
         {
@@ -39,48 +39,48 @@ namespace RestaurantReviewProgram.Models
             get { return id; }
             set { id = value; }
         }
-        /// <summmary>Street address the restaurant is located at</summary>
+        /// <summary>Street address the restaurant is located at</summary>
         /// <example>5315 Windward Parkway</example>
         public string Address
         {
             get { return address; }
         }
-        /// <summmary>City the restaurant is located in</summary>
+        /// <summary>City the restaurant is located in</summary>
         /// <example>Alpharetta</example>
         public string City
         {
             get { return city; }
         }
-        /// <summmary>State the restaurant is located in</summary>
+        /// <summary>State the restaurant is located in</summary>
         /// <example>GA</example>
         public string State
         {
             get { return state; }
         }
-        /// <summmary>Postal code the restaurant is located in</summary>
+        /// <summary>Postal code the restaurant is located in</summary>
         /// <example>30004</example>
         public string Zip
         {
             get { return zip; }
         }
-        /// <summmary>Restaurant's latitude</summary>
+        /// <summary>Restaurant's latitude</summary>
         public double Latitude
         {
             get { return latitude; }
             set { latitude = value; }
         }
-        /// <summmary>Restaurant's longitude</summary>
+        /// <summary>Restaurant's longitude</summary>
         public double Longitude
         {
             get { return longitude; }
             set { longitude = value; }
         }
-        /// <summmary>Count of restaurant's positive reviews</summary>
+        /// <summary>Count of restaurant's positive reviews</summary>
         public int PositiveReviews 
         {
             get { return positiveReviews; }
         }
-        /// <summmary>Count of restaurant's negative reviews</summary>
+        /// <summary>Count of restaurant's negative reviews</summary>
         public int NegativeReviews 
         {
             get { return negativeReviews; }
