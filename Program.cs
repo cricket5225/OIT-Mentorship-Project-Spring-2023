@@ -37,3 +37,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// homework 5/22 Vfix GeoJSON classes -cleanup centering/zooming? -research unit testing (XUnit documentation)

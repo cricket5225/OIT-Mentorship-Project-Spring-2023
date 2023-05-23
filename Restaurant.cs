@@ -14,9 +14,10 @@ namespace RestaurantReviewProgram.Models
         private string zip;
         private double latitude;
         private double longitude;
-        // Counter attributes
+        // Review attributes
         private int positiveReviews;
         private int negativeReviews;
+        private string color;
         // Constructor
         public Restaurant(string name, string address, string city, string state, string zip)
         {
@@ -84,6 +85,12 @@ namespace RestaurantReviewProgram.Models
         public int NegativeReviews 
         {
             get { return negativeReviews; }
+        }
+        /// <summary>Evaluated when creating a marker; Green is majority positive reviews, red is majority negative, yellow is equal positive and negative reviews</summary>
+        public string Color
+        {
+            get { return color; }
+            set { color = value; }
         }
         // Methods
         public void addReview(RestaurantReview restaurantReview)

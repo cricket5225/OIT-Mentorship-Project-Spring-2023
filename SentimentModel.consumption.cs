@@ -50,7 +50,7 @@ namespace RestaurantReviewProgram
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("SentimentModel.zip");
+        private static string MLNetModelPath = Path.GetFullPath(@"Models/SentimentModel.zip");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 

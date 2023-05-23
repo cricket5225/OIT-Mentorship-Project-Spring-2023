@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace RestaurantReviewProgram.Controllers
 {
@@ -29,12 +30,6 @@ namespace RestaurantReviewProgram.Controllers
             this.httpClient = httpClient;
             this.key = secret.Value.ApiKey;
             httpClient.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/");
-        }
-
-        [HttpGet("map")]
-        public async Task createMapTest()
-        {
-            await generateMap();
         }
 
         // Creation - Post
@@ -85,6 +80,19 @@ namespace RestaurantReviewProgram.Controllers
             else { return new NotFoundResult(); }
         }
 
+        [HttpGet("generateMap")]
+        public async Task<FileContentResult> createMapTest()
+        {
+            byte[] map = await generateMap();
+            return File(map, "image/png");
+        }
+
+        [HttpGet("generateGeoJSON/{id}")]
+        public GeoJSON createGeoJSONTest(Guid id)
+        {
+            return new GeoJSON(restaurantList[id]);
+        }
+
         // Geocoding
         // https://maps.googleapis.com/maps/api/geocode/json?place_id=ChIJeRpOeF67j4AR9ydy_PIzPuM&key=YOUR_API_KEY
         private async Task geocode(Restaurant restaurant)
@@ -100,31 +108,62 @@ namespace RestaurantReviewProgram.Controllers
         }
 
         // Creating map
-        private async Task<string> generateMap()
+        private async Task<byte[]> generateMap()
         {
             string markers = "";
+            List<double> latArray = new List<double>();
+            List<double> longArray = new List<double>();
             foreach (Restaurant restaurant in restaurantList.Values)
             {
-                markers += $"&markers = label: F % 7C{restaurant.Latitude},{restaurant.Longitude}";
-                //Add logic for symbols to be + or - depending on rating
+                // Evaluating color
+                if (restaurant.PositiveReviews > restaurant.NegativeReviews) { restaurant.Color = "green"; }
+                else if (restaurant.NegativeReviews > restaurant.PositiveReviews) { restaurant.Color = "red"; }
+                else if (restaurant.NegativeReviews == restaurant.PositiveReviews) { restaurant.Color = "yellow"; }
+                // Add coordinates to 2D array
+                latArray.Add(restaurant.Latitude);
+                longArray.Add(restaurant.Longitude);
+                // Marker string
+                markers += ($"&markers=color:{restaurant.Color}%7Clabel:{restaurant.PositiveReviews}%7C{restaurant.Latitude},{restaurant.Longitude}");
             }
-            markers = HttpUtility.UrlEncode(markers);
-            HttpResponseMessage message = await httpClient.GetAsync($"staticmap?size=400x400{markers}&key={key}");
-            return message.ToString();
-            // Did research into returning this as a byte[] and ouldn't figure it out, tried to convert to GeoJSON below
+            // Finding median latitude- Unnecessary
+            double latMedian;
+            latArray.Sort();
+            if (latArray.Count % 2 == 1 ) // Odd number of elements in list, take middle
+            {
+                latMedian = latArray[(latArray.Count() - 1) / 2]; 
+            }
+            else // Even, take middle
+            {
+                latMedian = latArray[(latArray.Count()) / 2];
+            }
+            double longMedian;
+            longArray.Sort();
+            if (longArray.Count % 2 == 1) // Odd number of elements in list, take middle
+            {
+                longMedian = longArray[(longArray.Count() - 1) / 2];
+            }
+            else // Even, take middle
+            {
+                longMedian = longArray[(longArray.Count()) / 2];
+            }
+
+            // Make request
+            HttpResponseMessage message = await httpClient.GetAsync($"staticmap?center={latMedian},{longMedian}&size=400x400{markers}&key={key}");
+
+            return await message.Content.ReadAsByteArrayAsync();
         }
 
         // Return GeoJSON of one restaurant
         // https://learn.microsoft.com/en-us/bingmaps/v8-web-control/modules/geojson-module/
-        private string generateGeoJson(Guid id)
+        /* private string generateGeoJson(Guid id)
         {
             /* This method only turns one restaurant into a GeoJSON. Once this works, a foreach loop 
              * can be used on the restaurantList to do all at once */
 
             // Should take in one restaurant and generate a GeoJSON object
-            GeoJSON geoJSON = new GeoJSON(restaurantList[id]);
+            /*GeoJSON geoJSON = new GeoJSON(restaurantList[id]);
             // Should return GeoJSON object as a string
-            return JsonSerializer.Serialize(geoJSON);
-        }
+            return geoJSON; //JsonSerializer.Serialize(geoJSON);
+        } */
     }
 }

@@ -8,16 +8,16 @@ namespace RestaurantReviewProgram.Controllers
     public class ReviewCreator : ControllerBase
     {
         private readonly ILogger<ReviewCreator> logger;
-        private readonly RestaurantList restaurauntList;
+        private readonly RestaurantList restaurantList;
 
         public ReviewCreator(RestaurantList restaurantList, ILogger<ReviewCreator> logger)
         {
-            this.restaurauntList = restaurauntList;
+            this.restaurantList = restaurantList;
             this.logger = logger;
         }
 
-        [HttpGet("{restaurantId}/Review")] 
-        public RestaurantReview reviewCreator(string reviewString, Guid restaurantId, RestaurantList restaurantList) 
+        [HttpPost("{restaurantId}/Review")] 
+        public RestaurantReview reviewCreator(string reviewString, Guid restaurantId) 
         {
             // Turn reviewString into a review object to get sentiment
             RestaurantReview review = new RestaurantReview(reviewString);
