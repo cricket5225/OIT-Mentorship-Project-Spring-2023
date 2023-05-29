@@ -81,14 +81,14 @@ namespace RestaurantReviewProgram.Controllers
         }
 
         [HttpGet("generateMap")]
-        public async Task<FileContentResult> createMapTest()
+        public async Task<FileContentResult> createMap()
         {
             byte[] map = await generateMap();
             return File(map, "image/png");
         }
 
         [HttpGet("generateGeoJSON/{id}")]
-        public GeoJSON createGeoJSONTest(Guid id)
+        public GeoJSON createGeoJSON(Guid id)
         {
             return new GeoJSON(restaurantList[id]);
         }
@@ -123,7 +123,7 @@ namespace RestaurantReviewProgram.Controllers
                 latArray.Add(restaurant.Latitude);
                 longArray.Add(restaurant.Longitude);
                 // Marker string
-                markers += ($"&markers=color:{restaurant.Color}%7Clabel:{restaurant.PositiveReviews}%7C{restaurant.Latitude},{restaurant.Longitude}");
+                markers += ($"&markers=color:{restaurant.Color}%7Clabel:{restaurant.PositiveReviews+restaurant.NegativeReviews}%7C{restaurant.Latitude},{restaurant.Longitude}");
             }
             // Finding median latitude- Unnecessary
             double latMedian;

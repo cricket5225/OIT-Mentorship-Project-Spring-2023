@@ -4,8 +4,6 @@ namespace RestaurantReviewProgram.Controllers
 {
     [ApiController]
     [Route("[controller]")] 
-    /* Aspect oriented programming(?) Tells what URL should look like to access this-
-     * Route should be name of controller -controller */
     public class ServerCheck : ControllerBase
     {
             private readonly ILogger<ServerCheck> logger; // Dependency injection
