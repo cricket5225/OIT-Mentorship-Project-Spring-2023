@@ -16,7 +16,10 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddSingleton(typeof(RestaurantList));
 
 // Add HTTPClient
-builder.Services.AddHttpClient<RestaurantCreator>(options => options.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/geocode/json"));
+builder.Services.AddHttpClient("Google_Maps",
+        client =>
+        client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/geocode/json")
+    );
 
 // Add Secret
 builder.Services.Configure<Secret>(builder.Configuration.GetSection(Secret.Section));

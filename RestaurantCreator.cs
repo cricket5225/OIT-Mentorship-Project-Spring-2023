@@ -23,13 +23,12 @@ namespace RestaurantReviewProgram.Controllers
         private readonly HttpClient httpClient;
         private readonly string key;
 
-        public RestaurantCreator(RestaurantList restaurantList, ILogger<RestaurantCreator> logger, HttpClient httpClient, IOptions<Models.Secret> secret)
+        public RestaurantCreator(RestaurantList restaurantList, ILogger<RestaurantCreator> logger, IHttpClientFactory httpClientFactory, IOptions<Models.Secret> secret)
         {
             this.restaurantList = restaurantList;
             this.logger = logger;
-            this.httpClient = httpClient;
+            this.httpClient = httpClientFactory.CreateClient("Google_Maps");
             this.key = secret.Value.ApiKey;
-            httpClient.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/");
         }
 
         // Creation - Post
@@ -47,7 +46,7 @@ namespace RestaurantReviewProgram.Controllers
         }
         // Updating - Put
         [HttpPut()]
-        public async Task <ActionResult<Restaurant>> updateRestaurant(Restaurant restaurant)
+        public async Task<ActionResult<Restaurant>> updateRestaurant(Restaurant restaurant)
         {
             // Object will already have an id
             if (restaurantList.Keys.Contains(restaurant.Id))
@@ -87,7 +86,7 @@ namespace RestaurantReviewProgram.Controllers
             return File(map, "image/png");
         }
 
-        [HttpGet("generateGeoJSON/{id}")]
+        [HttpGet("generateGeoJSON")]
         public GeoJSON createGeoJSON(Guid id)
         {
             return new GeoJSON(restaurantList[id]);
@@ -152,18 +151,5 @@ namespace RestaurantReviewProgram.Controllers
 
             return await message.Content.ReadAsByteArrayAsync();
         }
-
-        // Return GeoJSON of one restaurant
-        // https://learn.microsoft.com/en-us/bingmaps/v8-web-control/modules/geojson-module/
-        /* private string generateGeoJson(Guid id)
-        {
-            /* This method only turns one restaurant into a GeoJSON. Once this works, a foreach loop 
-             * can be used on the restaurantList to do all at once */
-
-            // Should take in one restaurant and generate a GeoJSON object
-            /*GeoJSON geoJSON = new GeoJSON(restaurantList[id]);
-            // Should return GeoJSON object as a string
-            return geoJSON; //JsonSerializer.Serialize(geoJSON);
-        } */
     }
 }

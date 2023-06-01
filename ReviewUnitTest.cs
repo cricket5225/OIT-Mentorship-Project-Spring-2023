@@ -20,6 +20,8 @@ namespace UnitTesting
             ILogger<ReviewCreator> logger = new NullLogger<ReviewCreator>();
             RestaurantList restaurantList = new RestaurantList();
             Guid guid = Guid.NewGuid();
+            Restaurant restaurant = new Restaurant("Local Woodfire Grill", "5315 Windward Parkway", "Alpharetta", "GA", "30004");
+            restaurantList.Add(guid, restaurant);
             // create restaurant and add guid to the restaurantlist dictionary
             string reviewString = "I love this place!";
             ReviewCreator reviewCreatorController = new ReviewCreator(restaurantList, logger);
